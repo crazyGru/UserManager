@@ -54,8 +54,8 @@ def sign_up(user: UserSignUp):
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                level INT DEFAULT 0,
+                pass VARCHAR(255) NOT NULL,
+                lvl INT DEFAULT 0,
                 expire_day DATE
             )
         """)
@@ -70,7 +70,7 @@ def sign_up(user: UserSignUp):
         raise HTTPException(status_code=400, detail="Username or email already exists")
 
     # Insert the new user into the 'users' table
-    query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
+    query = "INSERT INTO users (username, email, pass) VALUES (%s, %s, %s)"
     values = (user.username, user.email, user.password)
     cursor.execute(query, values)
     db.commit()
