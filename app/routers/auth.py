@@ -10,7 +10,7 @@ db = mysql.connector.connect(
     host="ditmar.cu7mfbovde5z.us-east-1.rds.amazonaws.com",
     user="admin",
     password="123456789",
-    database="your_database"
+    database="mysql"
 )
 
 class UserSignIn(BaseModel):
