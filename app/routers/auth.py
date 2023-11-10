@@ -48,3 +48,8 @@ def sign_up(user: UserSignUp):
     db.commit()
 
     return {"message": "Sign-up successful"}
+
+@router.get("/")
+def helps():
+    print("Running")
+    return {"message": "Connection successful"}
