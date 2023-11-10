@@ -27,7 +27,7 @@ def sign_in(user: UserSignIn):
     # Implement your sign-in logic here
     # Validate the user credentials and return a response
     cursor = db.cursor()
-    query = "SELECT * FROM users WHERE email = %s AND password = %s"
+    query = "SELECT * FROM users WHERE email = %s AND pass = %s"
     values = (user.email, user.password)
     cursor.execute(query, values)
     result = cursor.fetchone()
@@ -61,7 +61,7 @@ def sign_up(user: UserSignUp):
         """)
 
     # Insert the new user into the 'users' table
-    query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
+    query = "INSERT INTO users (username, email, pass) VALUES (%s, %s, %s)"
     values = (user.username, user.email, user.password)
     cursor.execute(query, values)
     db.commit()
