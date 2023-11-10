@@ -60,8 +60,17 @@ def sign_up(user: UserSignUp):
             )
         """)
 
+    # Check if the username or email already exists
+    query = "SELECT id FROM users WHERE username = %s OR email = %s"
+    values = (user.username, user.email)
+    cursor.execute(query, values)
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username or email already exists")
+
     # Insert the new user into the 'users' table
-    query = "INSERT INTO users (username, email, pass) VALUES (%s, %s, %s)"
+    query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
     values = (user.username, user.email, user.password)
     cursor.execute(query, values)
     db.commit()
