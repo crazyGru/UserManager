@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi import HTTPException
 from pydantic import BaseModel
 import mysql.connector
+import stripe
 
 router = APIRouter()
 
@@ -33,7 +34,7 @@ def sign_in(user: UserSignIn):
     result = cursor.fetchone()
 
     if result:
-        return {"message": "Sign-in successful"}
+        return {"message": "Sign-in successful", "name":result['username'], "level":result['lvl'], "expire":result['expire_day']}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -81,3 +82,16 @@ def sign_up(user: UserSignUp):
 def helps():
     print("Running")
     return {"message": "Connection successful"}
+
+
+@router.post('/premium')
+async def process_premium(payment_detila: dict):
+    try:
+        payment_intent =stripe.PaymentIntent.create(
+            amount=1799,
+            currency='usd',
+            payment_method_types=['card'],
+        )
+        return payment_intent
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))

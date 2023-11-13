@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.routers import auth
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+import stripe
 
 app = FastAPI()
 app.add_middleware(
@@ -11,6 +12,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+stripe.api_key = ""
 
 app.include_router(auth.router, prefix="/api")
 
