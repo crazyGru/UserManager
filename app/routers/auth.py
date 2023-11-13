@@ -34,6 +34,7 @@ def sign_in(user: UserSignIn):
     result = cursor.fetchone()
 
     if result:
+        print(result)
         return {"message": "Sign-in successful", "name":result['username'], "level":result['lvl'], "expire":result['expire_day']}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
