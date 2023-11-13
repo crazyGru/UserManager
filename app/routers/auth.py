@@ -35,6 +35,7 @@ def sign_in(user: UserSignIn):
 
     if result:
         print(result)
+        print(type(result))
         return {"message": "Sign-in successful", "name":result['username'], "level":result['lvl'], "expire":result['expire_day']}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
