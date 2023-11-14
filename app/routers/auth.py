@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
+from fastapi import Request
 from pydantic import BaseModel
 import mysql.connector
 import stripe
@@ -107,3 +108,27 @@ async def create_checkout_session():
         cancel_url="localhost:8000/pricing",
     )
     return JSONResponse(content={"url": session.url})
+
+@router.post("/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.json()  # This line extracts the JSON payload from the request
+
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, "we_1OCOuVItQ91j83DiPPMX5hgi"
+        )
+    except ValueError as e:
+        # Invalid payload
+        raise HTTPException(status_code=400, detail=f"Invalid payload: {e}")
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        raise HTTPException(status_code=400, detail=f"Invalid signature: {e}")
+
+    # Handle the event
+    if event['type'] == 'payment_intent.succeeded':
+        # Payment succeeded, update your database or perform other actions
+        print('Payment succeeded!')
+
+    return {"status": "success"}
