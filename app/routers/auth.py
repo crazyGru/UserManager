@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import mysql.connector
 import stripe
@@ -86,14 +87,23 @@ def helps():
     return {"message": "Connection successful"}
 
 
-@router.post('/premium')
-async def process_premium(payment_detila: dict):
-    try:
-        payment_intent =stripe.PaymentIntent.create(
-            amount=1799,
-            currency='usd',
-            payment_method_types=['card'],
-        )
-        return payment_intent
-    except stripe.error.StripeError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/create-checkout-session")
+async def create_checkout_session():
+    session = await stripe.checkout.sessions.create(
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {
+                        "name": "T-shirt",
+                    },
+                    "unit_amount": 2000,
+                },
+                "quantity": 1,
+            }
+        ],
+        mode="payment",
+        success_url="localhost:8000/home",
+        cancel_url="localhost:8000/pricing",
+    )
+    return JSONResponse(content={"url": session.url})

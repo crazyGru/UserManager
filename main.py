@@ -13,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-stripe.api_key = ""
+stripe.api_key = "sk_test_51OAYN0ItQ91j83DilxeRLixL8nBtOwbGiJ5KSlB65qG576Eans0deS8osZ5vknUd2rej0R3FfcIOjvXiKpwBFgre003XBuMXBQ"
 
 app.include_router(auth.router, prefix="/api")
 
