@@ -5,13 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 import stripe
 from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from ssl import SSLContext
+import ssl
 
 app = FastAPI()
 app.add_middleware(
     HTTPSRedirectMiddleware
 )
 
-ssl_context = SSLContext()
+ssl_context = SSLContext(protocol=ssl.PROTOCOL_TLS_CLIENT)
 ssl_context.load_cert_chain("cert.pem", "key.pem")
 
 stripe.api_key = "sk_test_51OAYN0ItQ91j83DilxeRLixL8nBtOwbGiJ5KSlB65qG576Eans0deS8osZ5vknUd2rej0R3FfcIOjvXiKpwBFgre003XBuMXBQ"
